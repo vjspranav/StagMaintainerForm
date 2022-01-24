@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Autocomplete,
   Button,
   FormControl,
   InputLabel,
@@ -10,8 +11,30 @@ import {
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-
+import axios from "axios";
 function App() {
+  const [options, setOptions] = React.useState([]);
+  // Run once on mount
+  React.useEffect(() => {
+    // Get request using axios to get all the companies
+    // url: https://api.stag-os.org/maintainers/companies
+    // method: GET
+    // if status is 200, then set the options to the response.companies
+    // else set the options to an empty array
+    axios
+      .get("https://api.stag-os.org/maintainers/companies")
+      .then((response) => {
+        if (response.status === 200) {
+          setOptions(response.data.companies);
+        } else {
+          setOptions([]);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const initialValues = {
     github_username: "",
     email: "",
@@ -186,22 +209,31 @@ function App() {
               />
             </div>
             <div>
-              <TextField
-                style={{ width: "50%" }}
-                id="device_company"
-                label="Device Company"
-                name="device_company"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.device_company}
-                helperText={
-                  touched.device_company
-                    ? errors.device_company
-                    : "Please enter your device company (For Ex: Google)"
-                }
-                error={touched.device_company && Boolean(errors.device_company)}
-                variant="outlined"
-                margin="normal"
+              <Autocomplete
+                id="device_company_autoaomplete"
+                options={options}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    style={{ width: "50%" }}
+                    id="device_company"
+                    label="Device Company"
+                    name="device_company"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.device_company}
+                    helperText={
+                      touched.device_company
+                        ? errors.device_company
+                        : "Please enter your device company (For Ex: Google)"
+                    }
+                    error={
+                      touched.device_company && Boolean(errors.device_company)
+                    }
+                    variant="outlined"
+                    margin="normal"
+                  />
+                )}
               />
             </div>
             <div>
