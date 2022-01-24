@@ -26,9 +26,45 @@ function App() {
 }
 
 function Status() {
+  const [id, setId] = React.useState("");
+  const [status, setStatus] = React.useState("");
   return (
-    <div>
-      <h1>Status</h1>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <TextField
+        label="ID"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+      />
+      <Button
+        style={{
+          marginTop: "10px",
+        }}
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          setStatus("Loading...");
+          axios
+            .get(`/api/status/${id}`)
+            .then((res) => {
+              setStatus(res.data.status);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }}
+      >
+        Get Status
+      </Button>
+      {/* Show status */}
+      <h1>{status}</h1>
     </div>
   );
 }
@@ -141,7 +177,7 @@ function Main() {
       <div
         style={{
           textAlign: "center",
-          margin: "40px 0",
+          margin: "40px 0 0 0",
           fontSize: "2rem",
           color: "white",
           fontWeight: "600",
@@ -150,6 +186,14 @@ function Main() {
         }}
       >
         Stag Maintainer Application
+      </div>
+      <div
+        style={{
+          textAlign: "center",
+          margin: "0 0 40px 0",
+        }}
+      >
+        <a href="/status">Check Application Status</a>
       </div>
       <div
         style={{
