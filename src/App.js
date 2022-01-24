@@ -1,5 +1,4 @@
 import {
-  AppBar,
   Autocomplete,
   Button,
   FormControl,
