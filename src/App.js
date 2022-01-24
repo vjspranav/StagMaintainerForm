@@ -7,11 +7,33 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+
 function App() {
+  // Setup React Router
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="status" element={<Status />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+function Status() {
+  return (
+    <div>
+      <h1>Status</h1>
+    </div>
+  );
+}
+
+function Main() {
   const [options, setOptions] = React.useState([]);
   // Run once on mount
   React.useEffect(() => {
@@ -86,7 +108,13 @@ function App() {
   const onSubmit = (fields, { setSubmitting }) => {
     setSubmitting(false);
     console.log(fields);
-    alert(JSON.stringify(fields, null, 2));
+    axios
+      .post("https://api.stag-os.org/maintainers/apply", fields)
+      .then((response) => {
+        console.log(response);
+        // alert response.data._id
+        alert(response.data._id);
+      });
   };
 
   const [width, setWidth] = React.useState(window.innerWidth);
