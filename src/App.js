@@ -152,7 +152,7 @@ function Main() {
       .then((response) => {
         console.log(response);
         // alert response.data._id
-        alert(response.data._id);
+        alert("Form submitted successfully, please check your email");
       });
   };
 
