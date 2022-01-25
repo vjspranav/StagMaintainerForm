@@ -58,6 +58,7 @@ function Status() {
               else setStatus(res.data.message);
             })
             .catch((err) => {
+              setStatus("User not found");
               console.log(err);
             });
         }}
@@ -194,7 +195,7 @@ function Main() {
           margin: "0 0 40px 0",
         }}
       >
-        <a href="/status">Check Application Status</a>
+        <a href="/#/status">Check Application Status</a>
       </div>
       <div
         style={{
