@@ -147,6 +147,7 @@ function Main() {
   const onSubmit = (fields, { setSubmitting }) => {
     setSubmitting(false);
     console.log(fields);
+    fields.other_dependencies = fields.other_dependencies.split(",");
     axios
       .post("https://api.stag-os.org/maintainers/apply", fields)
       .then((response) => {
