@@ -297,7 +297,8 @@ function Main() {
                 margin="normal"
               />
               <Autocomplete
-                id="device_company_autoaomplete"
+                freeSolo
+                id="device_company_autocomplete"
                 options={options}
                 renderInput={(params) => (
                   <TextField
