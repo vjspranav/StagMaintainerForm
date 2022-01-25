@@ -152,7 +152,9 @@ function Main() {
       .then((response) => {
         console.log(response);
         // alert response.data._id
-        alert("Form submitted successfully, please check your email");
+        alert(
+          "Form submitted successfully, please check your email\nIf not recieved please check your spam folder"
+        );
       });
   };
 
