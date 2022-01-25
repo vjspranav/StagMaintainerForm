@@ -1,6 +1,6 @@
 {
   "name": "maintainer-form",
-  "homepage": ".",
+  "homepage": "https://maintainers.stag-os.org",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

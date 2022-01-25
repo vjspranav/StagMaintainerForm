@@ -7,7 +7,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -16,12 +16,12 @@ import axios from "axios";
 function App() {
   // Setup React Router
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="status" element={<Status />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
@@ -52,9 +52,10 @@ function Status() {
         onClick={() => {
           setStatus("Loading...");
           axios
-            .get(`/api/status/${id}`)
+            .get(`https://api.stag-os.org/maintainers/status/${id}`)
             .then((res) => {
-              setStatus(res.data.status);
+              if (res.data.maintainer) setStatus(res.data.maintainer.status);
+              else setStatus(res.data.message);
             })
             .catch((err) => {
               console.log(err);
