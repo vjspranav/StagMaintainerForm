@@ -54,7 +54,8 @@ function Status() {
           axios
             .get(`https://api.stag-os.org/maintainers/status/${id}`)
             .then((res) => {
-              if (res.data.maintainer) setStatus(res.data.maintainer.status);
+              console.log(res.data.maintainer);
+              if (res.data.maintainer) setStatus(res.data.maintainer[0].status);
               else setStatus(res.data.message);
             })
             .catch((err) => {
