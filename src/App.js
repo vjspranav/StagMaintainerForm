@@ -28,6 +28,7 @@ function App() {
 function Status() {
   const [id, setId] = React.useState("");
   const [status, setStatus] = React.useState("");
+  const [review, setReview] = React.useState("");
   return (
     <div
       style={{
@@ -55,8 +56,10 @@ function Status() {
             .get(`https://api.stag-os.org/maintainers/status/${id}`)
             .then((res) => {
               console.log(res.data.maintainer);
-              if (res.data.maintainer) setStatus(res.data.maintainer[0].status);
-              else setStatus(res.data.message);
+              if (res.data.maintainer) {
+                setStatus(res.data.maintainer[0].status);
+                setReview(res.data.maintainer[0].review || "");
+              } else setStatus(res.data.message);
             })
             .catch((err) => {
               setStatus("User not found");
@@ -68,6 +71,7 @@ function Status() {
       </Button>
       {/* Show status */}
       <h1>{status}</h1>
+      <h2>{review}</h2>
     </div>
   );
 }
@@ -140,7 +144,7 @@ function Main() {
       margin: 0,
       padding: 0,
       overflow: "auto",
-      background: "#0ed2f7",
+      backgroundColor: "#f5f5f5",
     },
   };
 
@@ -188,11 +192,12 @@ function Main() {
           fontSize: "2rem",
           color: "white",
           fontWeight: "600",
-          // textShadow:
-          // "-0.4px -0.4px 0 #000, 0.4px -0.4px 0 #000, -0.4px 0.4px 0 #000, 0.4px 0.4px 0 #000",
+          // Add a font color to go with the background
+          backgroundColor: "#3f51b5",
+          padding: "10px",
         }}
       >
-        Stag Maintainer Application
+        StagOS 13 Maintainer Application
       </div>
       <div
         style={{
@@ -200,8 +205,23 @@ function Main() {
           margin: "0 0 40px 0",
         }}
       >
-        <a href="/#/status">Check Application Status</a>
+        {/* <a href="/#/status">Check Application Status</a> */}
+        {/* Make this link a proper button */}
+        <Button
+          style={{
+            marginTop: "10px",
+          }}
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            window.location.href = "/#/status";
+          }}
+        >
+          Check Existing Application
+        </Button>
       </div>
+
+      {/* Apply for maintainer */}
       <div
         style={{
           display: "flex",
@@ -230,8 +250,6 @@ function Main() {
                 flexDirection: "column",
                 minWidth: isMobile ? "100vw" : "800px",
                 padding: "20px",
-                boxShadow:
-                  "rgba(255, 255, 255, 0.4) -5px 5px, rgba(255, 255, 255, 0.3) -10px 10px, rgba(255, 255, 255, 0.2) -15px 15px, rgba(255, 255, 255, 0.1) -20px 20px, rgba(255, 255, 255, 0.05) -25px 25px",
                 boxSizing: "border-box",
                 background: "white",
               }}
