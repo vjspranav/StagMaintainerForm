@@ -159,12 +159,19 @@ function Main() {
         console.log(response);
         // alert response.data._id
         // If response is 403, then alert with status message
-        if (response.status === 403) {
+        if (response.status === 403 || response.data?.status === 403) {
           alert(response.data.message);
         } else {
           alert(
             "Form submitted successfully, please check your email\nIf not recieved please check your spam folder"
           );
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        // If status is 403, then alert with status message
+        if (error.response.status === 403) {
+          alert(error.response.data.message);
         }
       });
   };
