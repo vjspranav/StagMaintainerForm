@@ -17,9 +17,9 @@ import {
   CircularProgress,
   Fade,
 } from "@mui/material";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, ArrowLeft as ArrowLeftIcon } from "lucide-react";
 
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -108,6 +108,8 @@ function Status() {
   const [loading, setLoading] = React.useState(false);
   const [showResult, setShowResult] = React.useState(false);
 
+  const navigate = useNavigate();
+
   const handleGetStatus = () => {
     setLoading(true);
     setShowResult(false);
@@ -153,6 +155,13 @@ function Status() {
             borderRadius: "16px",
           }}
         >
+          <Button
+            startIcon={<ArrowLeftIcon />}
+            onClick={() => navigate("/")}
+            sx={{ position: "absolute", left: 16, top: 16 }}
+          >
+            Back to Application
+          </Button>
           <Typography variant="h4" gutterBottom sx={{ color: "#00558b" }}>
             Check Application Status
           </Typography>
