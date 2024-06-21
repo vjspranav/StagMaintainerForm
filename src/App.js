@@ -14,7 +14,11 @@ import {
   createTheme,
   Box,
   Grid,
+  CircularProgress,
+  Fade,
 } from "@mui/material";
+import { Search as SearchIcon } from "lucide-react";
+
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -101,19 +105,30 @@ function Status() {
   const [id, setId] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [review, setReview] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [showResult, setShowResult] = React.useState(false);
 
   const handleGetStatus = () => {
-    setStatus("Loading...");
+    setLoading(true);
+    setShowResult(false);
     axios
       .get(`https://api.stag-os.org/maintainers/status/${id}`)
       .then((res) => {
         if (res.data.maintainer) {
           setStatus(res.data.maintainer[0].status);
-          setReview(res.data.maintainer[0].review || "");
-        } else setStatus(res.data.message);
+          setReview(res.data.maintainer[0].review || "No review available");
+        } else {
+          setStatus(res.data.message);
+          setReview("No application found with the given ID");
+        }
       })
       .catch(() => {
         setStatus("User not found");
+        setReview("No application found with the given ID");
+      })
+      .finally(() => {
+        setLoading(false);
+        setShowResult(true);
       });
   };
 
@@ -129,29 +144,98 @@ function Status() {
           textAlign: "center",
         }}
       >
-        <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
-          <Typography variant="h4" gutterBottom>
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            width: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            borderRadius: "16px",
+          }}
+        >
+          <Typography variant="h4" gutterBottom sx={{ color: "#00558b" }}>
             Check Application Status
           </Typography>
-          <TextField
-            fullWidth
-            label="ID"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGetStatus}
-            sx={{ mt: 2, mb: 3 }}
-          >
-            Get Status
-          </Button>
-          <Typography variant="h5" gutterBottom>
-            {status}
-          </Typography>
-          <Typography variant="body1">{review}</Typography>
+          <Box sx={{ display: "flex", alignItems: "flex-end", mb: 3 }}>
+            <TextField
+              fullWidth
+              label="Application ID"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              variant="outlined"
+              sx={{ mr: 1 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGetStatus}
+              disabled={loading}
+              sx={{
+                height: "56px",
+                width: "56px",
+                minWidth: "56px",
+                borderRadius: "50%",
+              }}
+            >
+              {loading ? <CircularProgress size={24} /> : <SearchIcon />}
+            </Button>
+          </Box>
+          <Fade in={showResult}>
+            <Box>
+              <Paper
+                elevation={2}
+                sx={{
+                  p: 3,
+                  mt: 3,
+                  backgroundColor:
+                    status === "Approved"
+                      ? "rgba(76, 175, 80, 0.1)"
+                      : status === "Rejected"
+                      ? "rgba(244, 67, 54, 0.1)"
+                      : "rgba(3, 169, 244, 0.1)",
+                  borderRadius: "8px",
+                }}
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h5"
+                      gutterBottom
+                      sx={{ color: "#00558b" }}
+                    >
+                      Application Status
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        fontWeight: "bold",
+                        color:
+                          status === "Approved"
+                            ? "#4caf50"
+                            : status === "Rejected"
+                            ? "#f44336"
+                            : "#03a9f4",
+                      }}
+                    >
+                      {status}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      sx={{ color: "#00558b", mt: 2 }}
+                    >
+                      Review Comments
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontStyle: "italic" }}>
+                      {review}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Box>
+          </Fade>
         </Paper>
       </Box>
     </Container>
