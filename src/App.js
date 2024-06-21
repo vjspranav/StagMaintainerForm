@@ -197,7 +197,7 @@ function Status() {
                   p: 3,
                   mt: 3,
                   backgroundColor:
-                    status === "Approved"
+                    status === "Accepted"
                       ? "rgba(76, 175, 80, 0.1)"
                       : status === "Rejected"
                       ? "rgba(244, 67, 54, 0.1)"
@@ -219,7 +219,7 @@ function Status() {
                       sx={{
                         fontWeight: "bold",
                         color:
-                          status === "Approved"
+                          status === "Accepted"
                             ? "#4caf50"
                             : status === "Rejected"
                             ? "#f44336"
